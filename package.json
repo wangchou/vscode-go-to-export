@@ -2,7 +2,7 @@
     "name": "go-to-export",
     "displayName": "go to export",
     "description": "jump to export line using word under cursor",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "engines": {
         "vscode": "^1.35.0"
     },
