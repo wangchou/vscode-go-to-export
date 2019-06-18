@@ -2,9 +2,12 @@
     "name": "go-to-export",
     "displayName": "go to export",
     "description": "jump to export line using word under cursor",
+    "publisher": "WangChou Lu",
     "version": "1.0.0",
+    "license": "MIT",
+    "repository": "https://github.com/wangchou/vscode-go-to-export",
     "engines": {
-        "vscode": "^1.35.0"
+        "vscode": "^1.26.0"
     },
     "categories": [
         "Other"
@@ -18,6 +21,13 @@
             {
                 "command": "extension.go-to-export",
                 "title": "Go to export"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "extension.go-to-export",
+                "key": "alt+.",
+                "mac": "alt+."
             }
         ]
     },
