@@ -14,6 +14,17 @@ sayHello()
 export let sayHello = () => { ... }
 ```
 
+### Keybinding
+create your keybinding with `extension.go-to-export` command
+
+For example:
+```json
+    {
+        "key": "your shortcut",
+        "command": "extension.go-to-export"
+    },
+```
+
 ### Details
 This extension use the `word under cursor` to search for
 
@@ -25,13 +36,13 @@ export function 'cursor word'( ... )
 ```
 and jump to matched line.
 
-### Keybinding
-create your keybinding with `extension.go-to-export` command
+....
 
-For example:
-```json
-    {
-        "key": "your shortcut",
-        "command": "extension.go-to-export"
-    },
+if no export found will try to search
+
+```js
+function 'cursor word'(...)
+let 'cursor word'
+var 'cursor word'
+const 'cursor word'
 ```

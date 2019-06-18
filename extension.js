@@ -10,22 +10,45 @@ function activate(context) {
     }
 
     async function findExport(word) {
-        const regexText = `export (let|const|var|function) ${word}(\\(| )`
+        const findExportRegex = `export[ ]+(let|const|var|function)[ ]+${word}(\\(| |=)`
+        const findFunctionRegex = `function[ ]+${word}(\\(| |=)`
+        const findVariableRegex = `(let|const|var)[ ]+${word}( |=)`
         var matches = []
         await vscode.workspace.findTextInFiles(
-            { pattern: regexText, isRegExp: true },
+            { pattern: findExportRegex, isRegExp: true },
             match => {
                 matches.push(match)
             }
         );
 
+
+        if (matches.length >= 1) {
+            if (matches.length > 1) {
+                vscode.window.showInformationMessage(`Multiple exports found... will go to random one`);
+            }
+            return matches
+        }
+
+
+        if (matches.length == 0) {
+            await vscode.workspace.findTextInFiles(
+                { pattern: findFunctionRegex, isRegExp: true },
+                match => {
+                    matches.push(match)
+                }
+            );
+            await vscode.workspace.findTextInFiles(
+                { pattern: findVariableRegex, isRegExp: true },
+                match => {
+                    matches.push(match)
+                }
+            );
+        }
+
         if (matches.length == 0) {
             vscode.window.showInformationMessage(`No match found`);
         }
 
-        if (matches.length > 1) {
-            vscode.window.showInformationMessage(`Multiple exports found... will go to random one`);
-        }
         return matches
     }
 

@@ -2,8 +2,8 @@
     "name": "go-to-export",
     "displayName": "go to export",
     "description": "jump to export line using word under cursor",
-    "publisher": "WangChou Lu",
-    "version": "1.0.0",
+    "publisher": "wangchou",
+    "version": "1.0.1",
     "license": "MIT",
     "repository": "https://github.com/wangchou/vscode-go-to-export",
     "engines": {
