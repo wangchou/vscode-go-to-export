@@ -3,7 +3,7 @@
     "displayName": "go to export",
     "description": "jump to export line using word under cursor",
     "publisher": "wangchou",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "license": "MIT",
     "repository": "https://github.com/wangchou/vscode-go-to-export",
     "engines": {

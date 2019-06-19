@@ -1,7 +1,7 @@
 # vscode-go-to-export
-A VSCode extension: go to
+Go to
 
-* js exported line
+* exported js module
 * class / function / variable
 * React or Svelte components
 
@@ -39,12 +39,13 @@ This extension use the `word under cursor` to search for
     export var 'cursor word' = ...
     export const 'cursor word' = ...
     export function 'cursor word'( ... )
+    export { 'cursor word', ... }
 ```
 and jump to matched line.
 
 ....
 
-NOT FOUND => search `class / function / variable`
+NOT FOUND => search for `class / function / variable`
 
 ```js
     class 'cursor word' { ... }
@@ -54,7 +55,7 @@ NOT FOUND => search `class / function / variable`
     const 'cursor word'
 ```
 
-STILL NOT FOUND => search `React / Svelte Component`
+STILL NOT FOUND => search for `React / Svelte Component`
 
 ```js
     `${cursor word}.svelte`
