@@ -9,44 +9,62 @@ function activate(context) {
         return editor.document.getText(wordRange);
     }
 
-    async function findExport(word) {
-        const findExportRegex = `export[ ]+(let|const|var|function)[ ]+${word}(\\(| |=)`
-        const findFunctionRegex = `function[ ]+${word}(\\(| |=)`
-        const findVariableRegex = `(let|const|var)[ ]+${word}( |=)`
+    async function findByRegex(regex) {
         var matches = []
         await vscode.workspace.findTextInFiles(
-            { pattern: findExportRegex, isRegExp: true },
+            { pattern: regex, isRegExp: true },
             match => {
                 matches.push(match)
             }
         );
+        return matches
+    }
 
+    async function findExport(word) {
+        const export1Regex = `export[ ]+(let|const|var|function)[ ]+${word}(\\(| |=)`
+        const export2Regex = `export.*\\{.*${word}[\\}, \\n]+`
 
-        if (matches.length >= 1) {
-            if (matches.length > 1) {
-                vscode.window.showInformationMessage(`Multiple exports found... will go to random one`);
+        // search exports
+        var matches = [
+            ...(await findByRegex(export1Regex)),
+            ...(await findByRegex(export2Regex)),
+        ]
+
+        if (matches.length >= 1) { return matches }
+
+        // search class/function/variable
+        const functionRegex = `function[ ]+${word}(\\(| |=)`
+        const variableRegex = `(let|const|var)[ ]+${word}( |=)`
+        const classRegex = `class[ ]+${word}[ |\\n]`
+        matches = [
+            ...(await findByRegex(classRegex)),
+            ...(await findByRegex(functionRegex)),
+            ...(await findByRegex(variableRegex))
+        ]
+
+        if (matches.length >= 1) { return matches }
+
+        // search for React/Svelte Component
+        var uris = []
+        var searchPatterns = [
+            `**/${word}.svelte`,
+            `**/${word}.js`,
+            `**/${word}/index.js`,
+            `**/${word}.jsx`,
+            `**/${word}/index.jsx`,
+        ]
+
+        for (let i = 0; i < searchPatterns.length; i++) {
+            uris = await vscode.workspace.findFiles(searchPatterns[i])
+            if (uris.length > 0) { break }
+        }
+
+        if (uris.length > 0) {
+            let match = {
+                uri: uris[0],
+                ranges: [new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 0))]
             }
-            return matches
-        }
-
-
-        if (matches.length == 0) {
-            await vscode.workspace.findTextInFiles(
-                { pattern: findFunctionRegex, isRegExp: true },
-                match => {
-                    matches.push(match)
-                }
-            );
-            await vscode.workspace.findTextInFiles(
-                { pattern: findVariableRegex, isRegExp: true },
-                match => {
-                    matches.push(match)
-                }
-            );
-        }
-
-        if (matches.length == 0) {
-            vscode.window.showInformationMessage(`No match found`);
+            matches = [match]
         }
 
         return matches
@@ -61,11 +79,16 @@ function activate(context) {
 
     let disposable = vscode.commands.registerTextEditorCommand('extension.go-to-export', async function () {
         let word = getWordUnderCursor();
-
         let matches = await findExport(word);
+
+        if (matches.length > 1) {
+            vscode.window.showInformationMessage(`Multiple exports found... will go to random one`);
+        }
 
         if (matches.length > 0) {
             goToMatch(matches[0])
+        } else {
+            vscode.window.showInformationMessage(`No match found`);
         }
     });
 

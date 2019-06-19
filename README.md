@@ -1,8 +1,14 @@
 # vscode-go-to-export
-A VSCode extension: use cursor word to "go to the export"
+A VSCode extension: go to
+
+* js exported line
+* class / function / variable
+* React or Svelte components
+
+by `the word under cursor`
 
 ### Usage
-When cursor at `sayHello()` in main.js, press `alt + .` will go to `export let sayHello` in utils.js.
+Move cursor to `sayHello()` in main.js, press `alt + .` will go to `export let sayHello` in utils.js.
 
 ```js
 // main.js
@@ -29,20 +35,31 @@ For example:
 This extension use the `word under cursor` to search for
 
 ```js
-export let 'cursor word' = ...
-export var 'cursor word' = ...
-export const 'cursor word' = ...
-export function 'cursor word'( ... )
+    export let 'cursor word' = ...
+    export var 'cursor word' = ...
+    export const 'cursor word' = ...
+    export function 'cursor word'( ... )
 ```
 and jump to matched line.
 
 ....
 
-if no export found will try to search
+NOT FOUND => search `class / function / variable`
 
 ```js
-function 'cursor word'(...)
-let 'cursor word'
-var 'cursor word'
-const 'cursor word'
+    class 'cursor word' { ... }
+    function 'cursor word'(...) { ... }
+    let 'cursor word'
+    var 'cursor word'
+    const 'cursor word'
+```
+
+STILL NOT FOUND => search `React / Svelte Component`
+
+```js
+    `${cursor word}.svelte`
+    `${cursor word}.js`
+    `${cursor word}/index.js`
+    `${cursor word}.jsx`
+    `${cursor word}/index.jsx`
 ```
