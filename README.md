@@ -7,6 +7,8 @@ Go to
 
 by `the word under cursor`
 
+(:warning: this extension using proposed api => need to use insider version vscode)
+
 ### Usage
 Move cursor to `sayHello()` in main.js, press `alt + .` will go to `export let sayHello` in utils.js.
 
